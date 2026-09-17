@@ -1,0 +1,385 @@
+﻿<Window x:Class="SonyPTZController.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Sony PTZ Controller"
+        Height="650"
+        Width="950"
+        MinHeight="500"
+        MinWidth="750">
+
+    <Grid Margin="20">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- Header -->
+
+        <DockPanel Grid.Row="0"
+                   Margin="0,0,0,15">
+
+            <TextBlock Text="SONY PTZ CONTROLLER"
+                       FontSize="26"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"/>
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+
+                <Ellipse x:Name="ConnectionIndicator"
+                         Width="16"
+                         Height="16"
+                         Margin="0,0,8,0"/>
+
+                <TextBlock x:Name="ConnectionStatusText"
+                           Text="Disconnected"
+                           FontSize="16"
+                           VerticalAlignment="Center"/>
+
+            </StackPanel>
+
+        </DockPanel>
+
+
+        <!-- Serial Connection -->
+
+        <GroupBox Grid.Row="1"
+                  Header="Serial Connection"
+                  Padding="10"
+                  Margin="0,0,0,15">
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock Grid.Column="0"
+                           Text="COM Port:"
+                           VerticalAlignment="Center"
+                           Margin="0,0,8,0"/>
+
+                <ComboBox x:Name="PortComboBox"
+                          Grid.Column="1"
+                          Height="30"
+                          Margin="0,0,20,0"/>
+
+
+                <TextBlock Grid.Column="2"
+                           Text="Baud:"
+                           VerticalAlignment="Center"
+                           Margin="0,0,8,0"/>
+
+                <ComboBox x:Name="BaudComboBox"
+                          Grid.Column="3"
+                          Height="30"
+                          Margin="0,0,20,0"/>
+
+
+                <Button x:Name="RefreshButton"
+                        Grid.Column="5"
+                        Content="Refresh"
+                        Width="80"
+                        Height="30"
+                        Margin="0,0,8,0"
+                        Click="RefreshButton_Click"/>
+
+                <Button x:Name="ConnectButton"
+                        Grid.Column="6"
+                        Content="Connect"
+                        Width="90"
+                        Height="30"
+                        Click="ConnectButton_Click"
+                        Margin="0,0,8,0"/>
+
+                <Button x:Name="TestButton"
+                        Grid.Column="7"
+                        Content="Test Camera"
+                        Width="100"
+                        Height="30"
+                        Click="TestButton_Click"/>
+
+            </Grid>
+
+        </GroupBox>
+
+
+        <!-- VISCA Monitor -->
+
+        <GroupBox Grid.Row="2"
+          Header="Camera Controls"
+          Padding="15">
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="320"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+
+                <!-- PAN / TILT CONTROLS -->
+
+                <StackPanel Grid.Column="0"
+                    HorizontalAlignment="Center">
+
+                    <TextBlock Text="PAN / TILT"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,15"/>
+
+
+                    <!-- UP -->
+
+                    <Button Content="▲"
+                    FontSize="28"
+                    FontWeight="Bold"
+                    Width="100"
+                    Height="75"
+                    HorizontalAlignment="Center"
+                    PreviewMouseLeftButtonDown="TiltUp_MouseDown"
+                    PreviewMouseLeftButtonUp="PanTilt_MouseUp"/>
+
+
+                    <!-- LEFT / STOP / RIGHT -->
+
+                    <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+
+                        <Button Content="◀"
+                        FontSize="28"
+                        FontWeight="Bold"
+                        Width="100"
+                        Height="75"
+                        PreviewMouseLeftButtonDown="PanLeft_MouseDown"
+                        PreviewMouseLeftButtonUp="PanTilt_MouseUp"/>
+
+                        <Button Content="STOP"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Width="100"
+                        Height="75"
+                        Click="PanTiltStop_Click"/>
+
+                        <Button Content="▶"
+                        FontSize="28"
+                        FontWeight="Bold"
+                        Width="100"
+                        Height="75"
+                        PreviewMouseLeftButtonDown="PanRight_MouseDown"
+                        PreviewMouseLeftButtonUp="PanTilt_MouseUp"/>
+
+                    </StackPanel>
+
+
+                    <!-- DOWN -->
+
+                    <Button Content="▼"
+                    FontSize="28"
+                    FontWeight="Bold"
+                    Width="100"
+                    Height="75"
+                    HorizontalAlignment="Center"
+                    PreviewMouseLeftButtonDown="TiltDown_MouseDown"
+                    PreviewMouseLeftButtonUp="PanTilt_MouseUp"/>
+
+
+                    <!-- SPEED -->
+
+                    <TextBlock Text="Pan / Tilt Speed"
+                       FontSize="16"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0,25,0,5"/>
+
+                    <Slider x:Name="PanTiltSpeedSlider"
+                    Minimum="1"
+                    Maximum="24"
+                    Value="8"
+                    TickFrequency="1"
+                    IsSnapToTickEnabled="True"
+                    Width="300"
+                    ValueChanged="PanTiltSpeedSlider_ValueChanged"/>
+
+                    <TextBlock x:Name="PanTiltSpeedText"
+                       Text="8"
+                       FontSize="16"
+                       HorizontalAlignment="Center"
+                       Margin="0,5,0,0"/>
+
+                </StackPanel>
+
+
+                <!-- MONITOR / STATUS -->
+
+                <!-- ZOOM AND MONITOR -->
+
+                <StackPanel Grid.Column="1"
+            Margin="25,0,0,0">
+
+                    <!-- ZOOM -->
+
+                    <GroupBox Header="Zoom"
+              Padding="15"
+              Margin="0,0,0,20">
+
+                        <StackPanel>
+
+                            <TextBlock Text="Optical Zoom"
+                       FontSize="16"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,15"/>
+
+
+                            <Button Content="＋  TELE"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Height="55"
+                    Margin="20,0,20,10"
+                    PreviewMouseLeftButtonDown="ZoomTele_MouseDown"
+                    PreviewMouseLeftButtonUp="Zoom_MouseUp"/>
+
+
+                            <Button Content="−  WIDE"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Height="55"
+                    Margin="20,0,20,0"
+                    PreviewMouseLeftButtonDown="ZoomWide_MouseDown"
+                    PreviewMouseLeftButtonUp="Zoom_MouseUp"/>
+
+                        </StackPanel>
+
+                    </GroupBox>
+
+                    <GroupBox Header="Focus"
+          Padding="15"
+          Margin="0,0,0,20">
+
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+
+                            <!-- Focus modes -->
+
+                            <StackPanel Grid.Row="0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+
+                                <Button Content="AUTO"
+                    Width="90"
+                    Height="45"
+                    Margin="5"
+                    Click="FocusAuto_Click"/>
+
+                                <Button Content="ONE PUSH AF"
+                    Width="110"
+                    Height="45"
+                    Margin="5"
+                    Click="FocusOnePush_Click"/>
+
+                                <Button Content="MANUAL"
+                    Width="90"
+                    Height="45"
+                    Margin="5"
+                    Click="FocusManual_Click"/>
+
+                            </StackPanel>
+
+
+                            <!-- Manual focus -->
+
+                            <TextBlock Grid.Row="1"
+                   Text="Manual Focus"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"
+                   Margin="0,15,0,8"/>
+
+
+                            <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+
+                                <Button Content="◀ NEAR"
+                    Width="110"
+                    Height="45"
+                    Margin="5"
+                    PreviewMouseLeftButtonDown="FocusNear_MouseDown"
+                    PreviewMouseLeftButtonUp="Focus_MouseUp"/>
+
+                                <Button Content="FAR ▶"
+                    Width="110"
+                    Height="45"
+                    Margin="5"
+                    PreviewMouseLeftButtonDown="FocusFar_MouseDown"
+                    PreviewMouseLeftButtonUp="Focus_MouseUp"/>
+
+                            </StackPanel>
+
+                        </Grid>
+
+                    </GroupBox>
+
+                    <!-- VISCA MONITOR -->
+
+                    <GroupBox Header="VISCA Monitor"
+              Padding="10">
+
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+
+                            <TextBox x:Name="LogTextBox"
+                     Grid.Row="0"
+                     IsReadOnly="True"
+                     FontFamily="Consolas"
+                     FontSize="14"
+                     VerticalScrollBarVisibility="Auto"
+                     HorizontalScrollBarVisibility="Auto"
+                     TextWrapping="NoWrap"
+                     MinHeight="150"/>
+
+
+                            <Button Content="Clear Log"
+                    Width="100"
+                    Height="30"
+                    HorizontalAlignment="Right"
+                    Margin="0,10,0,0"
+                    Click="ClearLogButton_Click"/>
+
+                        </Grid>
+
+                    </GroupBox>
+
+                </StackPanel>
+
+            </Grid>
+
+        </GroupBox>
+
+    </Grid>
+
+</Window>
