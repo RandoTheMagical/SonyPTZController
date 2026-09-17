@@ -17,6 +17,7 @@ namespace SonyPTZController
             _camera = new ViscaCamera(_serial);
 
             _serial.DataReceived += Serial_DataReceived;
+            _serial.DataSent += Serial_DataSent;
             _serial.StatusChanged += Serial_StatusChanged;
 
             SetupBaudRates();
@@ -210,16 +211,15 @@ namespace SonyPTZController
         }
 
 
-        private void Serial_DataReceived(
-            object? sender,
-            string data)
+        private void Serial_DataReceived(object? sender, string data)
         {
-            Dispatcher.Invoke(() =>
-            {
-                Log($"RX  {data}");
-            });
+            Dispatcher.Invoke(() => { Log(data); });
         }
 
+        private void Serial_DataSent(object? sender, string data)
+        {
+            Dispatcher.Invoke(() => { Log(data); });
+        }
 
         private void Serial_StatusChanged(
             object? sender,
@@ -316,8 +316,6 @@ namespace SonyPTZController
             if (!_serial.IsConnected)
                 return;
 
-            Log("TX  PAN/TILT STOP");
-
             _camera.PanTiltStop();
         }
 
@@ -338,14 +336,27 @@ namespace SonyPTZController
             }
         }
 
+        private void ZoomSpeedSlider_ValueChanged(
+        object sender,
+        RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (_camera == null)
+                return;
+
+            int speed = (int)Math.Round(e.NewValue);
+
+            _camera.ZoomSpeed = speed;
+
+            if (ZoomSpeedText != null)
+                ZoomSpeedText.Text = speed.ToString();
+        }
+
         private void ZoomTele_MouseDown(
     object sender,
     System.Windows.Input.MouseButtonEventArgs e)
         {
             if (!_serial.IsConnected)
                 return;
-
-            Log("TX  ZOOM TELE");
 
             _camera.ZoomTele();
 
@@ -360,8 +371,6 @@ namespace SonyPTZController
             if (!_serial.IsConnected)
                 return;
 
-            Log("TX  ZOOM WIDE");
-
             _camera.ZoomWide();
 
             e.Handled = true;
@@ -375,8 +384,6 @@ namespace SonyPTZController
             if (!_serial.IsConnected)
                 return;
 
-            Log("TX  ZOOM STOP");
-
             _camera.ZoomStop();
 
             e.Handled = true;
@@ -389,8 +396,6 @@ namespace SonyPTZController
             if (!_serial.IsConnected)
                 return;
 
-            Log("TX  FOCUS AUTO");
-
             _camera.FocusAuto();
         }
 
@@ -401,8 +406,6 @@ namespace SonyPTZController
         {
             if (!_serial.IsConnected)
                 return;
-
-            Log("TX  FOCUS ONE PUSH");
 
             _camera.FocusOnePush();
         }
@@ -415,8 +418,6 @@ namespace SonyPTZController
             if (!_serial.IsConnected)
                 return;
 
-            Log("TX  FOCUS MANUAL");
-
             _camera.FocusManual();
         }
 
@@ -427,8 +428,6 @@ namespace SonyPTZController
         {
             if (!_serial.IsConnected)
                 return;
-
-            Log("TX  FOCUS NEAR");
 
             _camera.FocusNear();
 
@@ -443,8 +442,6 @@ namespace SonyPTZController
             if (!_serial.IsConnected)
                 return;
 
-            Log("TX  FOCUS FAR");
-
             _camera.FocusFar();
 
             e.Handled = true;
@@ -457,8 +454,6 @@ namespace SonyPTZController
         {
             if (!_serial.IsConnected)
                 return;
-
-            Log("TX  FOCUS STOP");
 
             _camera.FocusStop();
 

@@ -7,12 +7,14 @@
         MinHeight="500"
         MinWidth="750">
 
-    <Grid Margin="20">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+              HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="20">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
 
@@ -227,48 +229,81 @@
 
                 <!-- ZOOM AND MONITOR -->
 
-                <StackPanel Grid.Column="1"
-            Margin="25,0,0,0">
+                <!-- ZOOM, FOCUS AND MONITOR -->
+
+                <Grid Grid.Column="1"
+                    Margin="25,0,0,0">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="220"/>
+                    </Grid.RowDefinitions>
+
 
                     <!-- ZOOM -->
 
-                    <GroupBox Header="Zoom"
+                    <GroupBox Grid.Row="0"
+              Header="Zoom"
               Padding="15"
               Margin="0,0,0,20">
 
                         <StackPanel>
 
                             <TextBlock Text="Optical Zoom"
-                       FontSize="16"
-                       FontWeight="Bold"
-                       HorizontalAlignment="Center"
-                       Margin="0,0,0,15"/>
-
+                               FontSize="16"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,15"/>
 
                             <Button Content="＋  TELE"
-                    FontSize="20"
-                    FontWeight="Bold"
-                    Height="55"
-                    Margin="20,0,20,10"
-                    PreviewMouseLeftButtonDown="ZoomTele_MouseDown"
-                    PreviewMouseLeftButtonUp="Zoom_MouseUp"/>
-
+                                FontSize="20"
+                                FontWeight="Bold"
+                                Height="55"
+                                Margin="20,0,20,10"
+                                PreviewMouseLeftButtonDown="ZoomTele_MouseDown"
+                                PreviewMouseLeftButtonUp="Zoom_MouseUp"/>
 
                             <Button Content="−  WIDE"
-                    FontSize="20"
-                    FontWeight="Bold"
-                    Height="55"
-                    Margin="20,0,20,0"
-                    PreviewMouseLeftButtonDown="ZoomWide_MouseDown"
-                    PreviewMouseLeftButtonUp="Zoom_MouseUp"/>
+                                FontSize="20"
+                                FontWeight="Bold"
+                                Height="55"
+                                Margin="20,0,20,0"
+                                PreviewMouseLeftButtonDown="ZoomWide_MouseDown"
+                                PreviewMouseLeftButtonUp="Zoom_MouseUp"/>
+
+                            <TextBlock Text="Zoom Speed"
+                               FontSize="15"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Margin="0,20,0,5"/>
+
+                            <Slider x:Name="ZoomSpeedSlider"
+                                Minimum="1"
+                                Maximum="8"
+                                Value="4"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                Width="300"
+                                ValueChanged="ZoomSpeedSlider_ValueChanged"/>
+
+                            <TextBlock x:Name="ZoomSpeedText"
+                               Text="4"
+                               FontSize="15"
+                               HorizontalAlignment="Center"
+                               Margin="0,5,0,0"/>
 
                         </StackPanel>
 
                     </GroupBox>
 
-                    <GroupBox Header="Focus"
-          Padding="15"
-          Margin="0,0,0,20">
+
+                    <!-- FOCUS -->
+
+                    <GroupBox Grid.Row="1"
+              Header="Focus"
+              Padding="15"
+              Margin="0,0,0,20">
 
                         <Grid>
 
@@ -282,26 +317,26 @@
                             <!-- Focus modes -->
 
                             <StackPanel Grid.Row="0"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center">
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center">
 
                                 <Button Content="AUTO"
-                    Width="90"
-                    Height="45"
-                    Margin="5"
-                    Click="FocusAuto_Click"/>
+                        Width="90"
+                        Height="45"
+                        Margin="5"
+                        Click="FocusAuto_Click"/>
 
                                 <Button Content="ONE PUSH AF"
-                    Width="110"
-                    Height="45"
-                    Margin="5"
-                    Click="FocusOnePush_Click"/>
+                        Width="110"
+                        Height="45"
+                        Margin="5"
+                        Click="FocusOnePush_Click"/>
 
                                 <Button Content="MANUAL"
-                    Width="90"
-                    Height="45"
-                    Margin="5"
-                    Click="FocusManual_Click"/>
+                        Width="90"
+                        Height="45"
+                        Margin="5"
+                        Click="FocusManual_Click"/>
 
                             </StackPanel>
 
@@ -309,29 +344,29 @@
                             <!-- Manual focus -->
 
                             <TextBlock Grid.Row="1"
-                   Text="Manual Focus"
-                   FontWeight="Bold"
-                   HorizontalAlignment="Center"
-                   Margin="0,15,0,8"/>
+                       Text="Manual Focus"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0,15,0,8"/>
 
 
                             <StackPanel Grid.Row="2"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center">
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center">
 
                                 <Button Content="◀ NEAR"
-                    Width="110"
-                    Height="45"
-                    Margin="5"
-                    PreviewMouseLeftButtonDown="FocusNear_MouseDown"
-                    PreviewMouseLeftButtonUp="Focus_MouseUp"/>
+                        Width="110"
+                        Height="45"
+                        Margin="5"
+                        PreviewMouseLeftButtonDown="FocusNear_MouseDown"
+                        PreviewMouseLeftButtonUp="Focus_MouseUp"/>
 
                                 <Button Content="FAR ▶"
-                    Width="110"
-                    Height="45"
-                    Margin="5"
-                    PreviewMouseLeftButtonDown="FocusFar_MouseDown"
-                    PreviewMouseLeftButtonUp="Focus_MouseUp"/>
+                        Width="110"
+                        Height="45"
+                        Margin="5"
+                        PreviewMouseLeftButtonDown="FocusFar_MouseDown"
+                        PreviewMouseLeftButtonUp="Focus_MouseUp"/>
 
                             </StackPanel>
 
@@ -339,10 +374,12 @@
 
                     </GroupBox>
 
+
                     <!-- VISCA MONITOR -->
 
-                    <GroupBox Header="VISCA Monitor"
-              Padding="10">
+                    <GroupBox Grid.Row="2"
+                      Header="VISCA Monitor"
+                      Padding="10">
 
                         <Grid>
 
@@ -352,34 +389,40 @@
                             </Grid.RowDefinitions>
 
 
+                            <!-- Log -->
+
                             <TextBox x:Name="LogTextBox"
-                     Grid.Row="0"
-                     IsReadOnly="True"
-                     FontFamily="Consolas"
-                     FontSize="14"
-                     VerticalScrollBarVisibility="Auto"
-                     HorizontalScrollBarVisibility="Auto"
-                     TextWrapping="NoWrap"
-                     MinHeight="150"/>
+                                 Grid.Row="0"
+                                 IsReadOnly="True"
+                                 AcceptsReturn="True"
+                                 FontFamily="Consolas"
+                                 FontSize="14"
+                                 TextWrapping="NoWrap"
+                                 VerticalScrollBarVisibility="Auto"
+                                 HorizontalScrollBarVisibility="Auto"/>
 
 
-                            <Button Content="Clear Log"
-                    Width="100"
-                    Height="30"
-                    HorizontalAlignment="Right"
-                    Margin="0,10,0,0"
-                    Click="ClearLogButton_Click"/>
+                            <!-- Clear Log -->
+
+                            <Button Grid.Row="1"
+                                Content="Clear Log"
+                                Width="100"
+                                Height="30"
+                                HorizontalAlignment="Right"
+                                Margin="0,10,0,0"
+                                Click="ClearLogButton_Click"/>
 
                         </Grid>
 
                     </GroupBox>
 
-                </StackPanel>
+                </Grid>
 
             </Grid>
 
         </GroupBox>
 
     </Grid>
+    </ScrollViewer>
 
 </Window>

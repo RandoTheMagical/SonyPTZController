@@ -6,6 +6,7 @@ namespace SonyPTZController
     {
         private readonly SerialConnection _serial;
         public int PanTiltSpeed { get; set; } = 8;
+        public int ZoomSpeed { get; set; } = 4;
 
         public ViscaCamera(SerialConnection serial)
         {
@@ -126,25 +127,37 @@ namespace SonyPTZController
 
         public void ZoomTele()
         {
+            int speed = ClampZoomSpeed(ZoomSpeed);
+
+            byte command = (byte)(0x20 + (speed - 1));
+
             Send(
-                0x81,
-                0x01,
-                0x04,
-                0x07,
-                0x20,
+                0x81, 0x01, 0x04, 0x07,
+                command,
                 0xFF);
         }
 
-
         public void ZoomWide()
         {
+            int speed = ClampZoomSpeed(ZoomSpeed);
+
+            byte command = (byte)(0x30 + (speed - 1));
+
             Send(
-                0x81,
-                0x01,
-                0x04,
-                0x07,
-                0x30,
+                0x81, 0x01, 0x04, 0x07,
+                command,
                 0xFF);
+        }
+
+        private int ClampZoomSpeed(int speed)
+        {
+            if (speed < 1)
+                return 1;
+
+            if (speed > 8)
+                return 8;
+
+            return speed;
         }
 
         // ---------------------------------------------------------
